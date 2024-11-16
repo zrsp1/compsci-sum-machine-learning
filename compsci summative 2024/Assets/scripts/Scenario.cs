@@ -9,6 +9,7 @@ public class Scenario : MonoBehaviour
     public NN nn;
     public TrainingManager trainingManager;
     public Agent agentScript;
+    public target tar;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,5 +26,7 @@ public class Scenario : MonoBehaviour
     public void Reset()
     {
         agent.transform.position = transform.position;
+        agent.GetComponent<SpriteRenderer>().color = Color.white;
+        tar.newPos();
     }
 }
