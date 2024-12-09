@@ -77,6 +77,7 @@ public class Creature : MonoBehaviour
         Creature traits = children.GetComponent<Creature>();
         traits.sight = sight + Random.Range(-0.25f, 0.25f);
         traits.speed = speed + Random.Range(-0.25f, 0.25f);
+        traits.hunger = 10;
     }
 
 }
