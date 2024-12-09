@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class TrainingManager : MonoBehaviour
 {
 
     public List<Scenario> scenarios = new List<Scenario>();
+    [SerializeField]
     public List<NN.Layer[]> survivors = new List<NN.Layer[]>();
 
     float time = 0;
@@ -29,16 +31,24 @@ public class TrainingManager : MonoBehaviour
 
     void newGeneration()
     {
-        Debug.Log(survivors.Count);
+
+        Debug.Log("new generation");
+        foreach (var survivor in survivors)
+        {
+            Debug.Log(survivor);
+        }
+
+
         foreach (var scenario in scenarios)
         {
+
             try
             {
                 scenario.nn.layers = survivors[UnityEngine.Random.Range(0, survivors.Count - 1)];
             }
             catch (ArgumentOutOfRangeException)
             {
-
+                Debug.Log("error");
             }
             finally
             {
