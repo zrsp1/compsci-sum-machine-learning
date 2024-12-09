@@ -29,6 +29,7 @@ public class TrainingManager : MonoBehaviour
 
     void newGeneration()
     {
+        Debug.Log(survivors.Count);
         foreach (var scenario in scenarios)
         {
             try
@@ -41,6 +42,7 @@ public class TrainingManager : MonoBehaviour
             }
             finally
             {
+                survivors.Clear();
                 scenario.Reset();
                 scenario.agentScript.MutateAgent();
             }

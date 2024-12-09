@@ -11,6 +11,8 @@ public class Agent : MonoBehaviour
     public float mutationAmount = 0.8f;
     public float mutationChance = 0.2f;
 
+    bool win = false;
+
     [SerializeField]
     Scenario scenario;
 
@@ -35,11 +37,12 @@ public class Agent : MonoBehaviour
         //controller.Move(new Vector3(nnOutput[0], nnOutput[1]));
 
         //when the goal has been reached
-        if (Vector2.Distance(transform.position, target.position) < 1f)
+        if (Vector2.Distance(transform.position, target.position) < 1f && !win)
         {
             scenario.trainingManager.survivors.Add(nn.copyLayers());
             GetComponent<SpriteRenderer>().color = Color.green;
-            Debug.Log("success");
+            win = true;
+            //Debug.Log("success");
         }
     }
 

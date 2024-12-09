@@ -6,6 +6,7 @@ TagManager:
   tags:
   - training manager
   - agent
+  - food
   layers:
   - Default
   - TransparentFX
