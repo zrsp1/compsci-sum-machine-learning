@@ -26,6 +26,7 @@ public class Creature : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         if (eyes.targ)
         {
             nearestFood = eyes.targ.position;
@@ -37,10 +38,13 @@ public class Creature : MonoBehaviour
         }
 
         randTargTimer += Time.deltaTime;
+        */
 
+        float[] nnInput = {transform.position.x, transform.position.y, nearestFood.x, nearestFood.y};
+        float[] nnOutput = nn.Brain(nnInput);
 
         Vector2 v2 = transform.position;
-        rb.velocity = (nearestFood - v2).normalized * speed;
+        rb.velocity = (new Vector2(nnOutput[0], nnOutput[1])).normalized * speed;
         hunger -= Time.deltaTime * speed * sight;
         if ( hunger < 0 )
         {
@@ -77,7 +81,17 @@ public class Creature : MonoBehaviour
         Creature traits = children.GetComponent<Creature>();
         traits.sight = sight + Random.Range(-0.25f, 0.25f);
         traits.speed = speed + Random.Range(-0.25f, 0.25f);
+        if (traits.sight <= 0)
+        {
+            traits.sight = 0.1f;
+        }
+        if (traits.speed <= 0)
+        {
+            traits.speed = 0.1f;
+        }
         traits.hunger = 10;
+        traits.nn.MutateNetwork(0.8f, 0.2f);
     }
+
 
 }

@@ -2,7 +2,8 @@
 
 public class NN : MonoBehaviour
 {
-    int [] networkShape = {4,32,2};
+
+    public int [] networkShape = {4,32,2};
     public Layer [] layers;
 
     // Awake is called when the script instance is being loaded.
@@ -96,7 +97,7 @@ public class NN : MonoBehaviour
             }
         }
 
-        //This function is the activation function for the neural network uncomment the one you want to use.
+
         public void Activation()
         {
             // //leaky relu function
@@ -116,19 +117,20 @@ public class NN : MonoBehaviour
             // }
 
             //tanh function
+            /*
             for(int i = 0; i < nodeArray.Length; i++)
             {
                 nodeArray[i] = (float)System.Math.Tanh(nodeArray[i]);
             }
-
+            */
             // //relu function
-            // for(int i = 0; i < nodeArray.Length; i++)
-            // {
-            //     if(nodeArray[i] < 0)
-            //     {
-            //         nodeArray[i] = 0;
-            //     }
-            // }
+            for (int i = 0; i < nodeArray.Length; i++)
+            {
+                if (nodeArray[i] < 0)
+                {
+                    nodeArray[i] = 0;
+                }
+            }
         }
 
         //This is used to randomly modify the weights and biases for the Evolution Sim and Genetic Algorithm.

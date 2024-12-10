@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodSpawner : MonoBehaviour
+public class creatureSpawner : MonoBehaviour
 {
 
-    public GameObject food;
-    float cd;
+    public GameObject creaturePrefab;
+    float cd = 20;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,15 +17,11 @@ public class FoodSpawner : MonoBehaviour
     void Update()
     {
         cd += Time.deltaTime;
-        if (cd > 0.25f)
+        if (cd > 20)
         {
-            SpawnFood();
+            GameObject creature  = Instantiate(creaturePrefab);
+            creature.GetComponent<NN>().MutateNetwork(1, 1);
             cd = 0;
         }
-    }
-
-    void SpawnFood()
-    {
-        Instantiate(food, new Vector3(Random.Range(-40,40),Random.Range(-40,40),0), Quaternion.identity);
     }
 }

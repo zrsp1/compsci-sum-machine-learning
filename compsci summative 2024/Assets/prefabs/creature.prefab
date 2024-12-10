@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 3638546272808113503}
   - component: {fileID: 3259236305063947279}
   - component: {fileID: 9072984182992593796}
+  - component: {fileID: 8506837830811161867}
   m_Layer: 0
   m_Name: creature
   m_TagString: Untagged
@@ -162,7 +163,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 2747690628134850419, guid: b670ab75dde984907b8570040daa08c5, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0.2216981, b: 0.2216981, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -184,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463d1bd6a60c3014ab01f6908f8fe190, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nn: {fileID: 0}
+  nn: {fileID: 8506837830811161867}
   speed: 1
   sight: 1
   nearestFood: {x: 0, y: 0}
@@ -255,3 +256,16 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &8506837830811161867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6267656952495989783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ba8d64bd86c67348ad0bac8201f1004, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkShape: 040000002000000002000000

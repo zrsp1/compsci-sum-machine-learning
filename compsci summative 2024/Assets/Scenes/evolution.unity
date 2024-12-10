@@ -184,7 +184,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10.84
+  orthographic size: 28.588715
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -350,6 +350,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1215123241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1215123243}
+  - component: {fileID: 1215123242}
+  m_Layer: 0
+  m_Name: creatureSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1215123242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215123241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f540bcda178e9e044b558048a01c8783, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  creaturePrefab: {fileID: 6267656952495989783, guid: e0495504cfc3dde4796e66db640bd45b, type: 3}
+--- !u!4 &1215123243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215123241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.159628, y: 7.7715592, z: -0.1738589}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5026845520262663016
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -417,11 +462,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2878474455742139458, guid: e0495504cfc3dde4796e66db640bd45b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.88
+      value: -1.6
       objectReference: {fileID: 0}
     - target: {fileID: 2878474455742139458, guid: e0495504cfc3dde4796e66db640bd45b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.56
+      value: 5.3
       objectReference: {fileID: 0}
     - target: {fileID: 2878474455742139458, guid: e0495504cfc3dde4796e66db640bd45b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -455,10 +500,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3638546272808113503, guid: e0495504cfc3dde4796e66db640bd45b, type: 3}
-      propertyPath: creaturePrefab
-      value: 
-      objectReference: {fileID: 6267656952495989783, guid: e0495504cfc3dde4796e66db640bd45b, type: 3}
     - target: {fileID: 6267656952495989783, guid: e0495504cfc3dde4796e66db640bd45b, type: 3}
       propertyPath: m_Name
       value: creature
@@ -477,3 +518,4 @@ SceneRoots:
   - {fileID: 5026845520262663016}
   - {fileID: 890409162}
   - {fileID: 905891901}
+  - {fileID: 1215123243}
