@@ -24,4 +24,11 @@ public class creatureSpawner : MonoBehaviour
             cd = 0;
         }
     }
+
+    [ContextMenu("Spawn")]
+    void Spawn()
+    {
+        GameObject creature = Instantiate(creaturePrefab);
+        creature.GetComponent<NN>().MutateNetwork(1, 1);
+    }
 }

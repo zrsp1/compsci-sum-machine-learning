@@ -42,8 +42,10 @@ public class Agent : MonoBehaviour
         float[] nnOutput = nn.Brain(nnInput);
 
         //rb.MovePosition(transform.position + new Vector3(nnOutput[0], nnOutput[1]));
-        rb.AddForce(new Vector2(nnOutput[0], nnOutput[1]));
+        //rb.AddForce(new Vector2(nnOutput[0], nnOutput[1]));
         //controller.Move(new Vector3(nnOutput[0], nnOutput[1]));
+
+        rb.velocity = new Vector2(nnOutput[0], nnOutput[1]);
 
         //when the goal has been reached
 

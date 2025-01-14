@@ -11,10 +11,13 @@ public class SimSpeedController : MonoBehaviour
     public bool autoAdjust;
     public float gameSpeed = 1;
 
+    public float timeElapseed = 0f;
 
 
 
     void Update() {
+
+        timeElapseed += Time.deltaTime;
         //if the space bar is pressed, change autoAdjust to the opposite of what it currently is
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -43,7 +46,13 @@ public class SimSpeedController : MonoBehaviour
                 
         }
     }
-
+    [ContextMenu ("jump start")]
+    void SpeedTen()
+    {
+        //jums starts the game if timescale is ever stuck at 0
+        gameSpeed = 10;
+        Time.timeScale = 10;
+    }
     void AdjustGameSpeed() {
         if (fpsAvg < 60)
         {

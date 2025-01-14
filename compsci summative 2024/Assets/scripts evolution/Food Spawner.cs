@@ -17,7 +17,7 @@ public class FoodSpawner : MonoBehaviour
     void Update()
     {
         cd += Time.deltaTime;
-        if (cd > 0.25f)
+        if (cd > 0.75f)
         {
             SpawnFood();
             cd = 0;

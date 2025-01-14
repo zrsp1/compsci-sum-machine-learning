@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class Creature : MonoBehaviour
 {
@@ -11,16 +13,18 @@ public class Creature : MonoBehaviour
     public float sight;
     public Vector2 nearestFood;
     public Rigidbody2D rb;
-    public float hunger = 10f;
+    public float hunger = 100f;
     public int food;
-    public Sight eyes;
+    public int raynum;
+ 
     public GameObject creaturePrefab;
 
     float randTargTimer;
     // Start is called before the first frame update
     void Start()
     {
-        
+        raynum = nn.networkShape[0]/2;
+        //Debug.Log(nn.layers[0].biasesArray[0]);
     }
 
     // Update is called once per frame
@@ -40,15 +44,70 @@ public class Creature : MonoBehaviour
         randTargTimer += Time.deltaTime;
         */
 
+
+        List<float> eyes = new List<float>();
+
+
+        for (int i = 0; i < raynum; i++)
+        {
+
+            //raycasts circularly around the agent.
+            //the origin is offset by new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i) * 0.6f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 0.6f) as to move it outside its own collider so it can only see other creatures and not itself
+            RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i) * 0.6f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 0.6f), new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i)*10, Mathf.Sin((2 * Mathf.PI) / raynum * i)*10), 7.5f);
+            Color lineCol = Color.white;
+            if (hit)
+            {
+                lineCol = Color.green;
+
+            }
+            Debug.DrawLine(transform.position + new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i) * 0.5f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 0.5f), new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i)*7.5f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 7.5f) + transform.position, lineCol);
+
+            
+            if(hit != false)
+            {
+                eyes.Add(hit.distance);
+                eyes.Add(hit.transform.localScale.x);
+                //Debug.Log(hit.transform.localScale.x);
+                //eyes.Add(1f);
+
+            }
+            else
+            {
+                eyes.Add(100f);
+                eyes.Add(0);
+                //eyes.Add(0f);
+            }
+
+        }
+
         float[] nnInput = {transform.position.x, transform.position.y, nearestFood.x, nearestFood.y};
-        float[] nnOutput = nn.Brain(nnInput);
+        //Debug.Log(eyes.Count);
+        float[] nnOutput = nn.Brain(eyes.ToArray()) ;
 
         Vector2 v2 = transform.position;
         rb.velocity = (new Vector2(nnOutput[0], nnOutput[1])).normalized * speed;
-        hunger -= Time.deltaTime * speed * sight;
+        hunger -= Time.deltaTime + (Time.deltaTime*speed) + (Time.deltaTime * sight);
         if ( hunger < 0 )
         {
             Destroy(gameObject);
+        }
+
+        //constrains the creature by pac-manning them to the other side of the map
+        if(transform.position.x > 40)
+        {
+            transform.position = new Vector3(-40,transform.position.y);
+        }
+        if (transform.position.x < -40)
+        {
+            transform.position = new Vector3(40, transform.position.y);
+        }
+        if (transform.position.y > 40)
+        {
+            transform.position = new Vector3(transform.position.x, -40);
+        }
+        if (transform.position.y < -40)
+        {
+            transform.position = new Vector3(transform.position.x, 40);
         }
     }
 
@@ -59,28 +118,32 @@ public class Creature : MonoBehaviour
         
         if (collision.transform.tag == "food")
         {
-            eyes.minDist = 100;
-            eyes.targ = null;
 
-            Destroy(collision.gameObject);
-            food++;
-            hunger += 10f;
+            eat(collision.gameObject);
 
-            if (food == 3)
-            {
-                food = 0;
-                Reproduce();
-            }
         }
 
+    }
+
+    void eat(GameObject target)
+    {
+        Destroy(target);
+        food++;
+        hunger += 30f;
+
+        if (food == 3)
+        {
+            food = 0;
+            Reproduce();
+        }
     }
 
     void Reproduce()
     {
         GameObject children = Instantiate(creaturePrefab, transform.position - new Vector3(0,0.5f,0), Quaternion.identity);
         Creature traits = children.GetComponent<Creature>();
-        traits.sight = sight + Random.Range(-0.25f, 0.25f);
-        traits.speed = speed + Random.Range(-0.25f, 0.25f);
+        //traits.sight = sight + Random.Range(-0.25f, 0.25f);
+        //traits.speed = speed + Random.Range(-0.25f, 0.25f);
         if (traits.sight <= 0)
         {
             traits.sight = 0.1f;
@@ -89,8 +152,9 @@ public class Creature : MonoBehaviour
         {
             traits.speed = 0.1f;
         }
-        traits.hunger = 10;
+        traits.hunger = 100;
         traits.nn.MutateNetwork(0.8f, 0.2f);
+        
     }
 
 
