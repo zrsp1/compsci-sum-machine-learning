@@ -14,9 +14,9 @@ public class Creature : MonoBehaviour
     public Vector2 nearestFood;
     public Rigidbody2D rb;
     public float hunger = 100f;
-    public int food;
+    public float food;
     public int raynum;
- 
+    public float size;
     public GameObject creaturePrefab;
 
     float randTargTimer;
@@ -24,6 +24,9 @@ public class Creature : MonoBehaviour
     void Start()
     {
         raynum = nn.networkShape[0]/2;
+
+        transform.localScale = new Vector2(size,size);
+
         //Debug.Log(nn.layers[0].biasesArray[0]);
     }
 
@@ -45,6 +48,9 @@ public class Creature : MonoBehaviour
         */
 
 
+        //vision
+        ///////////////////////////////////////////////
+
         List<float> eyes = new List<float>();
 
 
@@ -53,14 +59,14 @@ public class Creature : MonoBehaviour
 
             //raycasts circularly around the agent.
             //the origin is offset by new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i) * 0.6f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 0.6f) as to move it outside its own collider so it can only see other creatures and not itself
-            RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i) * 0.6f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 0.6f), new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i)*10, Mathf.Sin((2 * Mathf.PI) / raynum * i)*10), 7.5f);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i) * 0.6f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 0.6f)*size, new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i)*10, Mathf.Sin((2 * Mathf.PI) / raynum * i)*10), 7.5f);
             Color lineCol = Color.white;
             if (hit)
             {
                 lineCol = Color.green;
 
             }
-            Debug.DrawLine(transform.position + new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i) * 0.5f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 0.5f), new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i)*7.5f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 7.5f) + transform.position, lineCol);
+            Debug.DrawLine(transform.position + new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i) * 0.5f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 0.5f)*size, new Vector3(Mathf.Cos((2 * Mathf.PI) / raynum * i)*7.5f, Mathf.Sin((2 * Mathf.PI) / raynum * i) * 7.5f) + transform.position, lineCol);
 
             
             if(hit != false)
@@ -80,20 +86,47 @@ public class Creature : MonoBehaviour
 
         }
 
+
+        ////////////////////////////////////////
+
+
+        //neural network
+        //////////////////////////////////////////
+
         float[] nnInput = {transform.position.x, transform.position.y, nearestFood.x, nearestFood.y};
         //Debug.Log(eyes.Count);
         float[] nnOutput = nn.Brain(eyes.ToArray()) ;
 
+        /////////////////////////////////////////////////////
+ 
+
+
+
+
+        //movement
+        ///////////////////////////////////////////////////////////////////
+
         Vector2 v2 = transform.position;
         rb.velocity = (new Vector2(nnOutput[0], nnOutput[1])).normalized * speed;
-        hunger -= Time.deltaTime + (Time.deltaTime*speed) + (Time.deltaTime * sight);
-        if ( hunger < 0 )
+
+        //////////////////////////////////////////////////////////////////
+        ///
+
+
+        //hunger drain
+        /////////////////////////////////////////////////
+
+
+        hunger -= (Time.deltaTime + (Time.deltaTime * speed) + (Time.deltaTime * sight)) * size;
+        if (hunger < 0)
         {
             Destroy(gameObject);
         }
 
+
+
         //constrains the creature by pac-manning them to the other side of the map
-        if(transform.position.x > 40)
+        if (transform.position.x > 40)
         {
             transform.position = new Vector3(-40,transform.position.y);
         }
@@ -123,15 +156,26 @@ public class Creature : MonoBehaviour
 
         }
 
+        if (collision.transform.tag == "creature")
+        {
+            Debug.Log("creature");
+            
+            if (collision.transform.localScale.x < transform.localScale.x*2/3)
+            {
+                eat(collision.gameObject);
+            }
+
+        }
+
     }
 
     void eat(GameObject target)
     {
         Destroy(target);
-        food++;
-        hunger += 30f;
+        food += target.transform.localScale.x *2;
+        hunger += 30f * target.transform.localScale.x * 2;
 
-        if (food == 3)
+        if (food >= 3 * size)
         {
             food = 0;
             Reproduce();
@@ -144,14 +188,13 @@ public class Creature : MonoBehaviour
         Creature traits = children.GetComponent<Creature>();
         //traits.sight = sight + Random.Range(-0.25f, 0.25f);
         //traits.speed = speed + Random.Range(-0.25f, 0.25f);
-        if (traits.sight <= 0)
+        traits.size = size + Random.Range(-0.25f, 0.25f);
+
+        if (traits.size <= 0)
         {
-            traits.sight = 0.1f;
+            traits.size = 0.2f;
         }
-        if (traits.speed <= 0)
-        {
-            traits.speed = 0.1f;
-        }
+
         traits.hunger = 100;
         traits.nn.MutateNetwork(0.8f, 0.2f);
         
